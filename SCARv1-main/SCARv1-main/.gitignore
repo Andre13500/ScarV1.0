@@ -57,3 +57,7 @@ log/
 
 # NOTA: NO estamos ignorando los archivos '.drawio' de tu carpeta 'design' 
 # para que tus compañeros puedan ver los diagramas de base de datos y casos de uso.
+
+Scar_python/data/
+Scar_python/models/modelo_scar.keras
+bin/

@@ -7,5 +7,6 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "SCARv1-main/SCARv1-main/lib/**/*.jar"
-    ]
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
 }
