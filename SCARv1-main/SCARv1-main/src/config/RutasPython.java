@@ -14,6 +14,9 @@ public class RutasPython {
     /** Script borrador que solo abre la camara. */
     public static final String SCRIPT_ABRIR_CAMARA = BASE_PYTHON + "/src/abrir_camara.py";
 
+    /** Script que reconoce rostros con el modelo entrenado. */
+    public static final String SCRIPT_RECONOCER = BASE_PYTHON + "/src/reconocer_camara.py";
+
     private RutasPython() {
         // Clase de constantes, no se instancia.
     }

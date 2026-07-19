@@ -49,6 +49,25 @@ public class UsuarioDAO {
         return lista;
     }
 
+    /**
+     * Busca a la persona por el NOMBRE del empleado (no por el usuario de login),
+     * que es lo que devuelve el modelo de reconocimiento facial.
+     * La comparacion no distingue mayusculas/minusculas: el nombre se pasa a
+     * minusculas con toLowerCase() en Java y la columna con LOWER() en SQL,
+     * y el LIKE con % busca la coincidencia en cualquier parte del nombre
+     * (ej: "andres" encuentra "Andres Perez" o "Juan Andres").
+     */
+    public UsuarioDetalle buscarPorNombreEmpleado(String nombre) throws SQLException {
+        String sql = SQL_DETALLE + "WHERE LOWER(e.nombre) LIKE ?";
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, "%" + nombre.toLowerCase() + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? mapearDetalle(rs) : null;
+            }
+        }
+    }
+
     public boolean existeUsuario(String usuario) throws SQLException {
         String sql = "SELECT 1 FROM Usuario WHERE usuario = ?";
         try (Connection con = Conexion.obtenerConexion();

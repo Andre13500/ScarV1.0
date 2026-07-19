@@ -50,7 +50,7 @@ def crear_cascade(ruta):
     if not hasattr(cv2, "CascadeClassifier"):
         salir(
             "OpenCV no incluye CascadeClassifier. "
-            "Instala dependencias con Scar_python/setup_env.bat."
+            "Reinstala el entorno segun Scar_python/TUTORIAL_ENTORNO.md."
         )
     return cv2.CascadeClassifier(str(ruta))
 
