@@ -37,8 +37,6 @@ public class VentanaPrincipal extends JFrame {
     private JButton btnAbrirCamara;
     private JButton btnIniciarSesion;
     private JButton btnRegistrarUsuario;
-    private JLabel lblPersona; // muestra en tiempo real a quien reconoce la camara
-
     // Tarjeta lateral con los datos de la persona reconocida
     private JLabel lblEstadoTarjeta;  // "Reconocido: [Nombre]" en verde
     private JLabel[] valoresTarjeta;  // columna derecha de la tarjeta (los datos)
@@ -232,8 +230,8 @@ public class VentanaPrincipal extends JFrame {
         // la camara esta abierta. El script de Python avisa cada reconocimiento,
         // se consulta la BD y con publish() se actualiza la interfaz en vivo.
         btnAbrirCamara.setEnabled(false);
-        lblPersona.setForeground(Color.DARK_GRAY);
-        lblPersona.setText("Buscando rostro...");
+        lblEstadoTarjeta.setForeground(Color.DARK_GRAY);
+        lblEstadoTarjeta.setText("Buscando rostro...");
 
         new SwingWorker<Void, Reconocimiento>() {
             @Override
@@ -256,13 +254,12 @@ public class VentanaPrincipal extends JFrame {
                 Reconocimiento evento = eventos.get(eventos.size() - 1);
 
                 if (evento.nombre == null) {
-                    lblPersona.setForeground(Color.DARK_GRAY);
-                    lblPersona.setText("Buscando rostro...");
+                    // Ya no hay nadie frente a la camara: la tarjeta vuelve a espera
                     limpiarTarjeta();
+                    lblEstadoTarjeta.setForeground(Color.DARK_GRAY);
+                    lblEstadoTarjeta.setText("Buscando rostro...");
                 } else {
                     String hora = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-                    lblPersona.setForeground(VERDE_RECONOCIDO);
-                    lblPersona.setText("Persona reconocida: " + evento.nombre + "  |  Hora: " + hora);
                     mostrarDatosPersona(evento.nombre, evento.datos, hora);
                 }
             }
@@ -270,9 +267,8 @@ public class VentanaPrincipal extends JFrame {
             @Override
             protected void done() {
                 btnAbrirCamara.setEnabled(true);
-                lblPersona.setForeground(Color.GRAY);
-                lblPersona.setText("Reconocimiento apagado");
                 limpiarTarjeta();
+                lblEstadoTarjeta.setText("Reconocimiento apagado");
                 try {
                     get(); // relanza la excepcion si hubo error
                 } catch (Exception ex) {
