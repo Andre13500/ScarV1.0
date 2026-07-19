@@ -1,0 +1,73 @@
+# ====================================================================
+# ARCHIVOS DE CONFIGURACIÓN Y COMPILACIÓN DE JAVA
+# ====================================================================
+# Ignora las clases compiladas (.class)
+*.class
+
+# Ignora los archivos empaquetados finales
+*.war
+*.ear
+*.jar
+# EXCEPCIÓN: No ignores los drivers manuales que pusiste en tu carpeta lib
+!lib/**/*.jar
+
+# Carpeta donde VS Code o el compilador guardan los ejecutables binarios
+/bin/
+/target/
+Scar_python/.venv/
+.venv/
+.venv/
+**/ .venv/
+Scar_python/.venv/
+#no se sube la carpeta de data
+.data/
+
+# ====================================================================
+# CONFIGURACIONES DE ENTORNO DE DESARROLLO (IDE)
+# ====================================================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# Historial local de VS Code y extensiones
+.history/
+.ionide/
+
+# En caso de que uses otros IDEs en el futuro (NetBeans o Eclipse)
+nbproject/
+build/
+nbbuild/
+dist/
+nb-configuration.xml
+.mtj.tmp/
+.classpath
+.project
+.settings/
+
+# ====================================================================
+# SISTEMA OPERATIVO Y LOGS
+# ====================================================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs de SQL Server o errores de ejecución de Java
+*.log
+log/
+
+# ====================================================================
+# RESPALDOS DE BASE DE DATOS Y DIAGRAMAS
+# ====================================================================
+# Ignora respaldos físicos de SQL Server si los guardas en el proyecto (.bak)
+*.bak
+
+# NOTA: NO estamos ignorando los archivos '.drawio' de tu carpeta 'design' 
+# para que tus compañeros puedan ver los diagramas de base de datos y casos de uso.
+<<<<<<< HEAD:.gitignore
+=======
+
+>>>>>>> 9260d796a4de729470d383f961aab94cad00a374:SCARv1-main/SCARv1-main/.gitignore
+Scar_python/data/
+Scar_python/models/modelo_scar.keras
+bin/
