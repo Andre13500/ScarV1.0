@@ -14,7 +14,7 @@ from keras_facenet import FaceNet
 RUTA_GALERIA = MODELS / "galeria_rostros.pkl"
 RUTA_CASCADE = UTILS / "haarcascade_frontalface_default.xml"
 
-UMBRAL_SIMILITUD = 0.55        # antes era UMBRAL_CONFIANZA
+UMBRAL_SIMILITUD = 0.65        # antes era UMBRAL_CONFIANZA
 FRAMES_SEGUIDOS = 10
 FRAMES_SIN_ROSTRO = 10
 TAM_ROSTRO = (160, 160)        # FaceNet trabaja a 160x160
