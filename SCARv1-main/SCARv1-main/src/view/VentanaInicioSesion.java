@@ -261,11 +261,11 @@ public class VentanaInicioSesion extends JFrame {
             }
             // Abre el modulo segun el rol y cierra el login
             if (detalle.esAdministrador()) {
-                // new VentanaAdmin(detalle).setVisible(true); // Descomentar cuando exista
-                System.out.println("Abriendo Ventana Admin");
+                 new VentanaAdmin(detalle).setVisible(true); // Descomentar cuando exista
+                
             } else {
-                // new VentanaUsuario(detalle).setVisible(true); // Descomentar cuando exista
-                System.out.println("Abriendo Ventana Usuario");
+                 new VentanaUsuario(detalle).setVisible(true); // Descomentar cuando exista
+               
             }
             dispose();
         } catch (SQLException ex) {

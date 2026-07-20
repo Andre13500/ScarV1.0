@@ -1,4 +1,5 @@
 import sys
+import pickle
 
 from scar_paths import MODELS, UTILS, preparar_entorno
 
@@ -6,39 +7,40 @@ preparar_entorno()
 
 import cv2
 import numpy as np
-import tensorflow as tf
+from numpy.linalg import norm
+from keras_facenet import FaceNet
 
 
-RUTA_MODELO = MODELS / "modelo_scar.keras"
-RUTA_LABELS = MODELS / "labels.txt"
+RUTA_GALERIA = MODELS / "galeria_rostros.pkl"
 RUTA_CASCADE = UTILS / "haarcascade_frontalface_default.xml"
 
-UMBRAL_CONFIANZA = 0.80
+UMBRAL_SIMILITUD = 0.65        # antes era UMBRAL_CONFIANZA
 FRAMES_SEGUIDOS = 10
 FRAMES_SIN_ROSTRO = 10
-TAM_ROSTRO = (150, 150)
+TAM_ROSTRO = (160, 160)        # FaceNet trabaja a 160x160
 VENTANA = "SCAR - Reconocimiento"
 
 
 def cargar_recursos():
-    validar_archivo(RUTA_MODELO, "modelo")
-    validar_archivo(RUTA_LABELS, "labels")
+    validar_archivo(RUTA_GALERIA, "galeria")
     validar_archivo(RUTA_CASCADE, "cascade")
 
     try:
-        modelo = tf.keras.models.load_model(RUTA_MODELO)
+        with open(RUTA_GALERIA, "rb") as f:
+            galeria = pickle.load(f)
     except Exception as e:
-        salir(f"no se pudo cargar el modelo: {e}")
+        salir(f"no se pudo cargar la galeria: {e}")
 
-    labels = RUTA_LABELS.read_text(encoding="utf-8").split()
-    if not labels:
-        salir("labels.txt esta vacio")
+    if not galeria:
+        salir("la galeria esta vacia")
+
+    embedder = FaceNet()  # descarga los pesos la primera vez (necesita internet 1 vez)
 
     cascade = crear_cascade(RUTA_CASCADE)
     if cascade.empty():
         salir(f"no se pudo cargar el cascade: {RUTA_CASCADE}")
 
-    return modelo, labels, cascade
+    return embedder, galeria, cascade
 
 
 def validar_archivo(ruta, nombre):
@@ -55,16 +57,26 @@ def crear_cascade(ruta):
     return cv2.CascadeClassifier(str(ruta))
 
 
-def preparar_rostro(gray, x, y, w, h):
-    rostro = gray[y:y + h, x:x + w]
-    rostro = cv2.resize(rostro, TAM_ROSTRO)
-    return cv2.cvtColor(rostro, cv2.COLOR_GRAY2RGB)
+def preparar_rostro(frame, x, y, w, h):
+    # A diferencia de antes: recortamos del frame EN COLOR (no del gris)
+    rostro = frame[y:y + h, x:x + w]
+    rostro = cv2.cvtColor(rostro, cv2.COLOR_BGR2RGB)
+    return cv2.resize(rostro, TAM_ROSTRO)
 
 
-def predecir(modelo, labels, rostro):
-    prediccion = modelo.predict(np.expand_dims(rostro, 0), verbose=0)[0]
-    indice = int(np.argmax(prediccion))
-    return labels[indice], float(prediccion[indice])
+def obtener_embedding(embedder, rostro):
+    emb = embedder.embeddings(np.expand_dims(rostro, 0))[0]
+    return emb / norm(emb)
+
+
+def predecir(embedder, galeria, rostro):
+    emb = obtener_embedding(embedder, rostro)
+    mejor_nombre, mejor_score = "Desconocido", 0.0
+    for nombre, emb_ref in galeria.items():
+        score = float(np.dot(emb, emb_ref))  # coseno (vectores ya normalizados)
+        if score > mejor_score:
+            mejor_nombre, mejor_score = nombre, score
+    return mejor_nombre, mejor_score
 
 
 def salir(mensaje):
@@ -73,7 +85,7 @@ def salir(mensaje):
 
 
 def main():
-    modelo, labels, cascade = cargar_recursos()
+    embedder, galeria, cascade = cargar_recursos()
     video = cv2.VideoCapture(0)
 
     if not video.isOpened():
@@ -92,7 +104,7 @@ def main():
 
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
-            nombre_frame = reconocer_frame(frame, gray, faces, modelo, labels)
+            nombre_frame = reconocer_frame(frame, faces, embedder, galeria)
 
             if nombre_frame:
                 sin_rostro = 0
@@ -122,17 +134,17 @@ def main():
         print("FIN", flush=True)
 
 
-def reconocer_frame(frame, gray, faces, modelo, labels):
+def reconocer_frame(frame, faces, embedder, galeria):
     nombre_frame = None
 
     for (x, y, w, h) in faces:
-        rostro = preparar_rostro(gray, x, y, w, h)
-        nombre, confianza = predecir(modelo, labels, rostro)
+        rostro = preparar_rostro(frame, x, y, w, h)
+        nombre, score = predecir(embedder, galeria, rostro)
 
-        if confianza >= UMBRAL_CONFIANZA:
+        if score >= UMBRAL_SIMILITUD and nombre != "Desconocido":
             nombre_frame = nombre
             color = (0, 200, 0)
-            texto = f"{nombre} ({confianza:.0%})"
+            texto = f"{nombre} ({score:.0%})"
         else:
             color = (0, 0, 255)
             texto = "Desconocido"

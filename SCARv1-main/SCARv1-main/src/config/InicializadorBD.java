@@ -15,7 +15,7 @@ import model.Usuario;
  */
 public class InicializadorBD {
 
-    private static final String[] AREAS = {"1A", "2B", "3C", "4C"};
+    private static final String[] AREAS = {"1A", "2B", "3C", "4D"};
     private static final String ADMIN_USUARIO = "admin";
     private static final String ADMIN_CONTRASENA = "admin123";
 
