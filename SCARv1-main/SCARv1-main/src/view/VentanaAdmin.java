@@ -94,7 +94,7 @@ public class VentanaAdmin extends JFrame {
                 btnMaximizar.setText("□");
             } else {
                 setExtendedState(JFrame.MAXIMIZED_BOTH);
-                btnMaximizar.setText("❐");
+                btnMaximizar.setText("+");
             }
         });
 
@@ -110,7 +110,7 @@ public class VentanaAdmin extends JFrame {
                 btnCerrar.setOpaque(false);
             }
         });
-        btnCerrar.addActionListener(e -> System.exit(0));
+        btnCerrar.addActionListener(e -> dispose());
 
         panelControles.add(btnMinimizar);
         panelControles.add(btnMaximizar);

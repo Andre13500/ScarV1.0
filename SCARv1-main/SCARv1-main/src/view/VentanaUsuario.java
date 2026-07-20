@@ -85,7 +85,7 @@ public class VentanaUsuario extends JFrame {
                 btnCerrar.setOpaque(false);
             }
         });
-        btnCerrar.addActionListener(e -> System.exit(0));
+        btnCerrar.addActionListener(e -> dispose());
 
         panelControles.add(btnMinimizar);
         panelControles.add(btnCerrar);
@@ -116,7 +116,7 @@ public class VentanaUsuario extends JFrame {
         lblTituloVisual.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTituloVisual.setForeground(ACCENT_COLOR);
 
-        JLabel lblSub = new JLabel("Información registrada de su perfil", SwingConstants.CENTER);
+        JLabel lblSub = new JLabel("Informacion de Personal", SwingConstants.CENTER);
         lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblSub.setForeground(TEXT_MUTED);
         lblSub.setBorder(new EmptyBorder(4, 0, 0, 0));

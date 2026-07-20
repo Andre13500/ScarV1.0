@@ -67,7 +67,7 @@ public class VentanaPrincipal extends JFrame {
         titleBar.setOpaque(false);
         titleBar.setPreferredSize(new Dimension(0, 40));
 
-        JLabel lblTituloBarra = new JLabel("   SCAR v2.0 - Dashboard Principal", SwingConstants.LEFT);
+        JLabel lblTituloBarra = new JLabel("   SCAR v2.0 - Ventana Principal", SwingConstants.LEFT);
         lblTituloBarra.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblTituloBarra.setForeground(TEXT_MUTED);
 
@@ -118,7 +118,7 @@ public class VentanaPrincipal extends JFrame {
 
         JPanel headerText = new JPanel(new GridLayout(2, 1, 0, -5));
         headerText.setOpaque(false);
-        JLabel lblTituloSistema = new JLabel("Sistema de Control de Asistencia", SwingConstants.LEFT);
+        JLabel lblTituloSistema = new JLabel("Sistema de Control de Asistencia y Reconocimiento", SwingConstants.LEFT);
         lblTituloSistema.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTituloSistema.setForeground(TEXT_MAIN);
         
@@ -139,7 +139,7 @@ public class VentanaPrincipal extends JFrame {
 
     {
         // Carga la imagen al crear el panel (una sola vez)
-        java.net.URL imgURL = getClass().getResource("/resources/ImagenDecorativa.png");
+        java.net.URL imgURL = getClass().getResource("/resources/Depart.jpeg");
         if (imgURL != null) {
             ImageIcon icon = new ImageIcon(imgURL);
             if (icon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -167,9 +167,10 @@ public class VentanaPrincipal extends JFrame {
             g.fillRect(0, 0, getWidth(), getHeight());
         }
     }
-};
+};      
+//Cambio de tamaño para la imagen lateral y con los componentes vecinos
         panelImagenLateral.setOpaque(false);
-        panelImagenLateral.setPreferredSize(new Dimension(400, 0));
+        panelImagenLateral.setPreferredSize(new Dimension(500, 0));
         panelImagenLateral.setBorder(null); // Sin bordes
 
 
@@ -179,14 +180,14 @@ public class VentanaPrincipal extends JFrame {
         panelCentro.setBorder(new EmptyBorder(25, 40, 25, 40));
 
         // -- Configurar Botones --
-        btnAbrirCamara = crearCard("Supervisión en Vivo", "Accede al módulo de monitoreo de cámaras.", new Color(41, 128, 185), "=>");
+        btnAbrirCamara = crearCard("Iniciar Reconocimient", "Accede al módulo de monitoreo de cámaras.", new Color(41, 128, 185), "=>");
         // NUEVA ACCIÓN: Abre la nueva ventana de supervisión
         btnAbrirCamara.addActionListener(e -> abrirModuloSupervision());
 
-        btnIniciarSesion = crearCard("Iniciar Sesion", "Gestiona empleados, reportes y configuraciones.", new Color(39, 174, 96), "=>");
+        btnIniciarSesion = crearCard("Iniciar Sesion", "Inicio de sesion, Persona.", new Color(39, 174, 96), "=>");
         btnIniciarSesion.addActionListener(e -> new VentanaInicioSesion().setVisible(true));
 
-        btnRegistrarUsuario = crearCard("Registro de Personal", "Añade nuevos empleados y gestiona datos faciales.", new Color(142, 68, 173), "=>");
+        btnRegistrarUsuario = crearCard("Registro de Personal", "Registrar datos personales", new Color(142, 68, 173), "=>");
         btnRegistrarUsuario.addActionListener(e -> new VentanaRegistro().setVisible(true));
 
         panelCentro.add(btnAbrirCamara);
@@ -197,7 +198,7 @@ public class VentanaPrincipal extends JFrame {
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER));
         footer.setOpaque(false);
         footer.setBorder(new EmptyBorder(10, 0, 10, 0));
-        JLabel lblFooter = new JLabel("© 2026 SCAR EPN - Todos los derechos reservados | Servidor Conectado");
+        JLabel lblFooter = new JLabel("Scar || 2026");
         lblFooter.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblFooter.setForeground(TEXT_MUTED);
         footer.add(lblFooter);

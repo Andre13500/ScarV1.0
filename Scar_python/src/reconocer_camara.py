@@ -10,9 +10,19 @@ import numpy as np
 from numpy.linalg import norm
 from keras_facenet import FaceNet
 
+import tensorflow as tf
+# Quita las barras de progreso de Keras ("1/1 ━━━ 90ms/step") que
+# ensucian la consola en cada prediccion.
+tf.keras.utils.disable_interactive_logging()
 
 RUTA_GALERIA = MODELS / "galeria_rostros.pkl"
 RUTA_CASCADE = UTILS / "haarcascade_frontalface_default.xml"
+
+# Fuente de video:
+#   0            = camara integrada del PC
+#   1, 2...      = camaras adicionales (ej. telefono con DroidCam/Iriun)
+#   "http://..." = camara IP (ej. app "IP Webcam" del telefono)
+FUENTE_CAMARA = 1
 
 UMBRAL_SIMILITUD = 0.65        # antes era UMBRAL_CONFIANZA
 FRAMES_SEGUIDOS = 10
@@ -36,6 +46,16 @@ def cargar_recursos():
 
     embedder = FaceNet()  # descarga los pesos la primera vez (necesita internet 1 vez)
 
+    # keras_facenet llama a predict() sin silenciarlo y Keras imprime su
+    # barra de progreso ("1/1 ━━━ 90ms/step") en CADA prediccion.
+    # Envolvemos predict() para forzar siempre verbose=0 (silencio total).
+    predict_original = embedder.model.predict
+    embedder.model.predict = lambda *args, **kwargs: predict_original(
+            *args, **{**kwargs, "verbose": 0})
+
+    # Prediccion falsa de calentamiento: compila el grafo de TensorFlow
+    # ahora (durante la carga) y no cuando aparezca el primer rostro real.
+    embedder.embeddings(np.zeros((1, 160, 160, 3)))
     cascade = crear_cascade(RUTA_CASCADE)
     if cascade.empty():
         salir(f"no se pudo cargar el cascade: {RUTA_CASCADE}")
@@ -84,12 +104,22 @@ def salir(mensaje):
     sys.exit(1)
 
 
+def abrir_camara(fuente):
+    # Con indice numerico (0, 1...) usamos DirectShow, que abre rapido en
+    # Windows; con una URL de camara IP no aplica ese backend.
+    if isinstance(fuente, str):
+        return cv2.VideoCapture(fuente)
+    return cv2.VideoCapture(fuente, cv2.CAP_MSMF)
+
+
 def main():
+    # Orden sencillo: primero se carga todo el modelo (unos segundos)
+    # y despues se abre la camara ya lista para reconocer.
     embedder, galeria, cascade = cargar_recursos()
-    video = cv2.VideoCapture(0)
+    video = abrir_camara(FUENTE_CAMARA)
 
     if not video.isOpened():
-        salir("no se pudo abrir la camara")
+        salir(f"no se pudo abrir la camara (fuente: {FUENTE_CAMARA})")
 
     ultimo_nombre = None
     emitido = None

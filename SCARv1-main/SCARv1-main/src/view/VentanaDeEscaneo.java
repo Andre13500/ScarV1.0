@@ -68,7 +68,7 @@ public class VentanaDeEscaneo extends JDialog {
         titleBar.setOpaque(false);
         titleBar.setPreferredSize(new Dimension(0, 35));
 
-        JLabel lblTitulo = new JLabel("SCAR - Supervisión en Vivo", SwingConstants.CENTER);
+        JLabel lblTitulo = new JLabel("SCAR - Recnocimiento", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblTitulo.setForeground(TEXT_MUTED);
 
@@ -106,12 +106,12 @@ public class VentanaDeEscaneo extends JDialog {
         content.setOpaque(false);
         content.setBorder(new EmptyBorder(15, 25, 25, 25));
 
-        JLabel lblCamaraTitulo = new JLabel("Visor de Reconocimiento", SwingConstants.CENTER);
+        JLabel lblCamaraTitulo = new JLabel("Ventana de Reconocimiento", SwingConstants.CENTER);
         lblCamaraTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblCamaraTitulo.setForeground(TEXT_MAIN);
 
         // -- Botón de Control --
-        btnControlCamara = new JButton("INICIAR RECONOCIMIENTO");
+        btnControlCamara = new JButton("INICIAR CAMARA");
         btnControlCamara.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnControlCamara.setBackground(ACCENT_COLOR);
         btnControlCamara.setForeground(Color.WHITE);
