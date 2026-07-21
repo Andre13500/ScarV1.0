@@ -180,7 +180,7 @@ public class VentanaPrincipal extends JFrame {
         panelCentro.setBorder(new EmptyBorder(25, 40, 25, 40));
 
         // -- Configurar Botones --
-        btnAbrirCamara = crearCard("Iniciar Reconocimient", "Accede al módulo de monitoreo de cámaras.", new Color(41, 128, 185), "=>");
+        btnAbrirCamara = crearCard("Iniciar Reconocimiento", "Accede al módulo de monitoreo de cámaras.", new Color(41, 128, 185), "=>");
         // NUEVA ACCIÓN: Abre la nueva ventana de supervisión
         btnAbrirCamara.addActionListener(e -> abrirModuloSupervision());
 
